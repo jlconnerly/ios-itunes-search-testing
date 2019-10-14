@@ -21,14 +21,19 @@ import XCTest
 class iTunes_SearchTests: XCTestCase {
 
     func testForSomeResults() {
-        let controller = SearchResultController()
+        let mock = MockDataLoader()
+        mock.data = goodResultsData
+        let controller = SearchResultController(dataLoader: mock)
+        
         let resultsExpetation = expectation(description: "Wait for results")
         controller.performSearch(for: "GarageBand", resultType: .software) {
             resultsExpetation.fulfill()
         }
         wait(for: [resultsExpetation], timeout: 2)
-        
-        XCTAssertTrue(controller.searchResults.count > 0, "Expecting at least one result for GarageBand")
+        //Now check results
+        XCTAssertTrue(controller.searchResults.count == 2, "Expecting two results for GarageBand")
+        XCTAssertEqual("GarageBand", controller.searchResults[0].title)
+        XCTAssertEqual("Apple", controller.searchResults[0].artist)
     }
 
 }
