@@ -16,6 +16,7 @@ class SearchResultController {
     let baseURL = URL(string: "https://itunes.apple.com/search")!
     var searchResults: [SearchResult] = []
     let dataLoader: NetworkDataLoader
+    var error: Error?
     
     init(dataLoader: NetworkDataLoader = URLSession.shared) {
         self.dataLoader = dataLoader
@@ -37,6 +38,7 @@ class SearchResultController {
         self.dataLoader.loadData(with: request) { (data, error) in
             
             if let error = error { NSLog("Error fetching data: \(error)") }
+            
             guard let data = data else { completion(); return }
             
             do {
@@ -45,10 +47,10 @@ class SearchResultController {
                 self.searchResults = searchResults.results
             } catch {
                 print("Unable to decode data into object of type [SearchResult]: \(error)")
+                self.error = error
             }
             
             completion()
         }
     }
-
 }

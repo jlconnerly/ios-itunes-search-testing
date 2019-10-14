@@ -35,5 +35,34 @@ class iTunes_SearchTests: XCTestCase {
         XCTAssertEqual("GarageBand", controller.searchResults[0].title)
         XCTAssertEqual("Apple", controller.searchResults[0].artist)
     }
+    
+    func testBadResultData() {
+        let mock = MockDataLoader()
+        mock.data = badResultsData
+        let controller = SearchResultController(dataLoader: mock)
+        
+        let resultsExpetation = expectation(description: "Wait for results")
+        controller.performSearch(for: "GarageBand", resultType: .software) {
+            resultsExpetation.fulfill()
+        }
+        wait(for: [resultsExpetation], timeout: 2)
+        //Now check results
+        XCTAssertTrue(controller.searchResults.count == 0 , "Expecting no results for GarageBand using bad data")
+        XCTAssertNotNil(controller.error)
+    }
 
+    func testNoResultsData() {
+        let mock = MockDataLoader()
+        mock.data = noResultsData
+        let controller = SearchResultController(dataLoader: mock)
+
+        let resultsExpetation = expectation(description: "Wait for results")
+        controller.performSearch(for: "abcdefg123", resultType: .software) {
+            resultsExpetation.fulfill()
+        }
+        wait(for: [resultsExpetation], timeout: 2)
+        //Now check results
+        XCTAssertTrue(controller.searchResults.count == 0 , "Expecting no results for abcdefg123 using no data")
+        XCTAssertNil(controller.error)
+    }
 }

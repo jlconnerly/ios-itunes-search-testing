@@ -25,3 +25,26 @@ let goodResultsData = """
     }
 
 """.data(using: .utf8)!
+
+let badResultsData = """
+{
+  resultCount": 2,
+  "results": [
+        {
+          "trackName": "GarageBand",
+          "artistName": "Apple",
+        },
+        {
+          "trackName": "Garage Virtual Drumset Band",
+          "artistName": "Nexogen Private Limited",
+        }
+    ]
+}
+""".data(using: .utf8)!
+
+let noResultsData = """
+{
+    "resultCount": 0,
+    "results": []
+}
+""".data(using: .utf8)!
